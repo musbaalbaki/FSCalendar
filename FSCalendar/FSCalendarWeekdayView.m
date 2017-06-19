@@ -102,6 +102,11 @@
         label.font = self.calendar.appearance.weekdayFont;
         label.textColor = self.calendar.appearance.weekdayTextColor;
         label.text = useDefaultWeekdayCase ? weekdaySymbols[index] : [weekdaySymbols[index] uppercaseString];
+        NSString *language = [[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0];
+        
+        if ([language isEqualToString:@"ar"]) {
+            label.transform = CGAffineTransformMakeScale(-1.0, 1.0);
+        }
     }
 
 }

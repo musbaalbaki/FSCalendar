@@ -109,6 +109,13 @@
     FSCalendarHeaderCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     cell.header = self;
     [self configureCell:cell atIndexPath:indexPath];
+    
+    NSString *language = [[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0];
+    
+    if ([language isEqualToString:@"ar"]) {
+        cell.transform = CGAffineTransformMakeScale(-1.0, 1.0);
+    }
+    
     return cell;
 }
 

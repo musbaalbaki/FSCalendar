@@ -256,7 +256,12 @@
     
     _eventIndicator.numberOfEvents = self.numberOfEvents;
     _eventIndicator.color = self.colorsForEvents;
-
+    
+    NSString *language = [[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0];
+    
+    if ([language isEqualToString:@"ar"]) {
+        self.contentView.transform = CGAffineTransformMakeScale(-1.0, 1.0);
+    }
 }
 
 - (UIColor *)colorForCurrentStateInDictionary:(NSDictionary *)dictionary
