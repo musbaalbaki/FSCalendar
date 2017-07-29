@@ -109,7 +109,7 @@
     FSCalendarHeaderCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     cell.header = self;
     [self configureCell:cell atIndexPath:indexPath];
-        
+    
     return cell;
 }
 
@@ -186,6 +186,7 @@
     cell.titleLabel.font = appearance.headerTitleFont;
     cell.titleLabel.textColor = appearance.headerTitleColor;
     _calendar.formatter.dateFormat = appearance.headerDateFormat;
+    
     BOOL usesUpperCase = (appearance.caseOptions & 15) == FSCalendarCaseOptionsHeaderUsesUpperCase;
     NSString *text = nil;
     switch (self.calendar.transitionCoordinator.representingScope) {
@@ -196,11 +197,12 @@
                     text = nil;
                 } else {
                     NSDate *date = [self.calendar.gregorian dateByAddingUnit:NSCalendarUnitMonth value:indexPath.item-1 toDate:self.calendar.minimumDate options:0];
-                    text = [_calendar.formatter stringFromDate:date];
-                }
+                    NSString *string = [_calendar.formatter stringFromDate:date];
+                    text = [self convertToEnglishNumbers:string];                }
             } else {
                 NSDate *date = [self.calendar.gregorian dateByAddingUnit:NSCalendarUnitMonth value:indexPath.item toDate:self.calendar.minimumDate options:0];
-                text = [_calendar.formatter stringFromDate:date];
+                NSString *string = [_calendar.formatter stringFromDate:date];
+                text = [self convertToEnglishNumbers:string];
             }
             break;
         }
@@ -210,7 +212,9 @@
             } else {
                 NSDate *firstPage = [self.calendar.gregorian fs_middleDayOfWeek:self.calendar.minimumDate];
                 NSDate *date = [self.calendar.gregorian dateByAddingUnit:NSCalendarUnitWeekOfYear value:indexPath.item-1 toDate:firstPage options:0];
-                text = [_calendar.formatter stringFromDate:date];
+                
+                NSString *string = [_calendar.formatter stringFromDate:date];
+                text = [self convertToEnglishNumbers:string];
             }
             break;
         }
@@ -229,6 +233,19 @@
         [self configureCell:cell atIndexPath:[self.collectionView indexPathForCell:cell]];
     }];
 }
+
+- (NSString *)convertToEnglishNumbers:(NSString *)originalText {
+    NSNumberFormatter *formatter = [NSNumberFormatter new];
+    
+    formatter.locale = [NSLocale localeWithLocaleIdentifier:@"ar"];
+    for (NSInteger i = 0; i < 10; i++) {
+        NSNumber *num = @(i);
+        originalText = [originalText stringByReplacingOccurrencesOfString:[formatter stringFromNumber:num] withString:num.stringValue];
+    }
+    
+    return originalText;
+}
+
 
 @end
 
@@ -307,7 +324,7 @@
     self.itemSize = CGSizeMake(
                                self.collectionView.fs_width*((self.scrollDirection==UICollectionViewScrollDirectionHorizontal)?0.5:1),
                                self.collectionView.fs_height
-                              );
+                               );
     
 }
 
